@@ -32,7 +32,7 @@ def save_dataview():
     trade_status = dv.get_ts('trade_status')
     mask_sus = trade_status == '停牌'
     dv.append_df(mask_sus, 'suspended', is_quarterly=False)
-
+    dv.get_ts('index_member')
     dv.add_formula('not_index_member', '!index_member', is_quarterly=False)
 
     dv.add_formula('limit_reached', 'Abs((open - Delay(close, 1)) / Delay(close, 1)) > 0.095', is_quarterly=False)
@@ -55,11 +55,12 @@ def analyze_signal(dv, signal_name, output_format='pdf'):
     my_period = 5
     obj = SignalDigger(output_folder='../../output/test_signal',
                        output_format=output_format)
-    obj.process_signal_before_analysis(signal, price=price,
+    obj.process_signal_before_analysis(signal,
+                                       price=price,
                                        mask=mask_all,
-                                       n_quantiles=5, period=my_period,
-                                       benchmark_price=price_bench,
-                                       )
+                                       n_quantiles=5,
+                                       period=my_period,
+                                       benchmark_price=price_bench)
     res = obj.create_full_report()
     # print(res)
 
@@ -72,6 +73,7 @@ def simple_test_signal():
     analyze_signal(dv, 'open_jump', 'pdf')
     
     print("Signal return & IC test finished.")
+
 
 if __name__ == "__main__":
     save_dataview()

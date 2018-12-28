@@ -39,12 +39,12 @@ class Strategy(with_metaclass(abc.ABCMeta)):
     -------
 
     """
-    
+
     def __init__(self):
         super(Strategy, self).__init__()
         self.ctx = None
         # self.run_mode = common.RUN_MODE.BACKTEST
-        
+
         # self.ctx.pm = PortfolioManager(strategy=self)
         # self.pm = self.ctx.pm
 
@@ -52,17 +52,17 @@ class Strategy(with_metaclass(abc.ABCMeta)):
         self.seq_gen = SequenceGenerator()
 
         self.init_balance = 0.0
-        
+
     def init_from_config(self, props):
         pass
-    
+
     def initialize(self):
         pass
-    
+
     def _get_next_num(self, key):
         """used to generate id for orders and trades."""
         return str(np.int64(self.ctx.trade_date) * 10000 + self.seq_gen.get_next(key))
-    
+
     '''
     # -------------------------------------------------------------------------------------------
     # Order
@@ -287,10 +287,10 @@ class Strategy(with_metaclass(abc.ABCMeta)):
         """
         pass
     '''
-    
+
     # -------------------------------------------------------------------------------------------
     # Callback Indications & Responses
-    
+
     def on_trade(self, ind):
         """
 
@@ -316,7 +316,7 @@ class Strategy(with_metaclass(abc.ABCMeta)):
 
         """
         pass
-    
+
     def on_order_rsp(self, rsp):
         """
         
@@ -369,6 +369,7 @@ class AlphaStrategy(Strategy, model.FuncRegisterable):
     -------
 
     """
+
     # TODO register context
     def __init__(self, signal_model=None, stock_selector=None,
                  cost_model=None, risk_model=None,
@@ -379,34 +380,34 @@ class AlphaStrategy(Strategy, model.FuncRegisterable):
                  fc_options=None
                  ):
         super(AlphaStrategy, self).__init__()
-        
+
         self.period = ""
         self.n_periods = 1
         self.days_delay = 0
         self.cash = 0
         self.position_ratio = 0.98
         self.single_symbol_weight_limit = 1.0
-        
+
         self.risk_model = risk_model
         self.signal_model = signal_model
         self.cost_model = cost_model
         self.stock_selector = stock_selector
-        
+
         self.weights = None
-        
+
         self.pc_method = pc_method
 
         self.goal_positions = None
         self.match_method = match_method
 
-        self.portfolio_construction = self.forecast_portfolio_construction if pc_method=="forecast" else self.default_portfolio_construction
-        self._fc_selector    = fc_selector if fc_selector else AlphaStrategy.default_forecast_selector
+        self.portfolio_construction = self.forecast_portfolio_construction if pc_method == "forecast" else self.default_portfolio_construction
+        self._fc_selector = fc_selector if fc_selector else AlphaStrategy.default_forecast_selector
         self._fc_constructor = fc_constructor if fc_constructor else AlphaStrategy.default_forecast_constructor
-        self._fc_options     = fc_options
+        self._fc_options = fc_options
 
     def init_from_config(self, props):
         Strategy.init_from_config(self, props)
-        
+
         self.cash = props.get('init_balance', 100000000)
         self.period = props.get('period', 'month')
         self.days_delay = props.get('days_delay', 0)
@@ -418,8 +419,8 @@ class AlphaStrategy(Strategy, model.FuncRegisterable):
         self.use_pc_method(name='industry_neutral_index_weight', func=self.industry_neutral_index_weight, options=None)
         self.use_pc_method(name='equal_weight', func=self.equal_weight, options=None)
         self.use_pc_method(name='mc', func=self.optimize_mc, options={'util_func': self.util_net_signal,
-                                                                           'constraints': None,
-                                                                           'initial_value': None})
+                                                                      'constraints': None,
+                                                                      'initial_value': None})
         self.use_pc_method(name='factor_value_weight', func=self.factor_value_weight, options=None)
         self.use_pc_method(name='index_weight', func=self.index_weight, options=None)
         self.use_pc_method(name='market_value_weight', func=self.market_value_weight, options=None)
@@ -428,7 +429,7 @@ class AlphaStrategy(Strategy, model.FuncRegisterable):
 
         self._validate_parameters()
         print("AlphaStrategy Initialized.")
-    
+
     def _validate_parameters(self):
         if self.pc_method in ['mc', 'quad_opt']:
             if self.signal_model is None and self.cost_model is None and self.risk_model is None:
@@ -448,7 +449,7 @@ class AlphaStrategy(Strategy, model.FuncRegisterable):
             pass
         else:
             raise NotImplementedError("pc_method = {:s}".format(self.pc_method))
-    
+
     def on_trade(self, ind):
         """
 
@@ -461,10 +462,10 @@ class AlphaStrategy(Strategy, model.FuncRegisterable):
 
         """
         pass
-        
+
     def use_pc_method(self, name, func, options=None):
         self._register_func(name, func, options)
-    
+
     def _get_weights_last(self):
         current_positions = self.query_portfolio()
         univ_pos_dic = {p.symbol: p.current_size for p in current_positions}
@@ -483,17 +484,16 @@ class AlphaStrategy(Strategy, model.FuncRegisterable):
         
         """
         weights_last = self._get_weights_last()
-    
+
         signal = self.signal_model.forecast_signal(weights_target)
         cost = self.cost_model.calc_cost(weights_last, weights_target)
         # liquid = self.liquid_model.calc_liquid(weight_now)
         risk = self.risk_model.calc_risk(weights_target)
-    
+
         risk_coef = 1.0
         cost_coef = 1.0
         net_signal = signal - risk_coef * risk - cost_coef * cost  # - liquid * liq_factor
         return net_signal
-
 
     def default_portfolio_construction(self, universe_list=None):
         """
@@ -539,12 +539,12 @@ class AlphaStrategy(Strategy, model.FuncRegisterable):
 
         # if nan assign zero
         weights_all_universe = {k: 0.0 if np.isnan(v) else v for k, v in weights_all_universe.items()}
-        
+
         # normalize
         w_sum = np.sum(np.abs(list(weights_all_universe.values())))
         if w_sum > 1e-8:  # else all zeros weights
             weights_all_universe = {k: v / w_sum for k, v in weights_all_universe.items()}
-        
+
         # single symbol weight limit process
         if self.single_symbol_weight_limit < 1:
             weights_all_universe = {k: v if v < self.single_symbol_weight_limit else self.single_symbol_weight_limit
@@ -571,7 +571,7 @@ class AlphaStrategy(Strategy, model.FuncRegisterable):
     @staticmethod
     def default_forecast_selector(self, forecast_field='close_adj', universe=None):
         forecast = self.ctx.dataview.get_snapshot(self.ctx.trade_date)[[forecast_field]].copy()
-        forecast = forecast.rename( columns={forecast_field: "forecast"})
+        forecast = forecast.rename(columns={forecast_field: "forecast"})
         forecast['symbol'] = forecast.index
         return forecast
 
@@ -638,7 +638,7 @@ class AlphaStrategy(Strategy, model.FuncRegisterable):
             new_weights.loc[:, 'weight'] /= w_sum
 
         # Keep all removed stocks in weight, so when stock can be sold after it is tradable again after suspended.
-        tmp = zero_weights[ ~zero_weights['symbol'].isin(new_weights['symbol']) ]
+        tmp = zero_weights[~zero_weights['symbol'].isin(new_weights['symbol'])]
         if not tmp.empty:
             new_weights = pd.concat([new_weights, tmp])
 
@@ -670,7 +670,7 @@ class AlphaStrategy(Strategy, model.FuncRegisterable):
         df_industry_weight_sub = df_industry_weight.loc[industry_list]
         df_industry_weight_sub = pd.DataFrame(df_industry_weight_sub)
         df_industry_weight_sub.columns = ['weight']
-        df_industry_weight_sub['equal_weight'] = pd.DataFrame(snap.groupby('sw1')['sw1'].count()/len(snap))
+        df_industry_weight_sub['equal_weight'] = pd.DataFrame(snap.groupby('sw1')['sw1'].count() / len(snap))
 
         df_industry_weight_sub['dif'] = df_industry_weight_sub['equal_weight'] - df_industry_weight_sub['weight']
 
@@ -678,12 +678,12 @@ class AlphaStrategy(Strategy, model.FuncRegisterable):
 
         count_industry = pd.DataFrame(snap.groupby('sw1')['close'].count()).reset_index()
         count_industry.columns = ['sw1', 'count']
-        count_industry['internal_weight'] = 1.0/count_industry['count']
+        count_industry['internal_weight'] = 1.0 / count_industry['count']
 
-        snap = pd.merge(left = snap, right = count_industry[['sw1', 'internal_weight']], how = 'left', on = 'sw1')
-        snap = pd.merge(left = snap, right = df_industry_weight_sub[['sw1', 'norm_weight']], how = 'left', on = 'sw1')
+        snap = pd.merge(left=snap, right=count_industry[['sw1', 'internal_weight']], how='left', on='sw1')
+        snap = pd.merge(left=snap, right=df_industry_weight_sub[['sw1', 'norm_weight']], how='left', on='sw1')
         snap['weight'] = snap['internal_weight'] * snap['norm_weight']
-        df_weight = snap[['symbol','weight']]
+        df_weight = snap[['symbol', 'weight']]
 
         df_weight = df_weight.set_index('symbol')
         weights = df_weight['weight'].to_dict()
@@ -697,7 +697,7 @@ class AlphaStrategy(Strategy, model.FuncRegisterable):
         # calculate weight distribution of all industry
         df_weight = self.ctx.dataview.get_snapshot(self.ctx.trade_date)[['total_mv', 'index_member', 'sw1']]
         df_weight = df_weight[df_weight['index_member'] == 1]
-        df_weight['weight'] = df_weight['total_mv']/df_weight['total_mv'].sum()
+        df_weight['weight'] = df_weight['total_mv'] / df_weight['total_mv'].sum()
         df_industry_weight = df_weight.groupby('sw1')['weight'].sum()
 
         # industries in portfolio
@@ -705,17 +705,18 @@ class AlphaStrategy(Strategy, model.FuncRegisterable):
         df_industry_weight_sub = df_industry_weight.loc[industry_list]
         df_industry_weight_sub = pd.DataFrame(df_industry_weight_sub)
         df_industry_weight_sub.columns = ['weight']
-        df_industry_weight_sub['norm_weight'] = df_industry_weight_sub['weight']/df_industry_weight_sub['weight'].sum()
+        df_industry_weight_sub['norm_weight'] = df_industry_weight_sub['weight'] / df_industry_weight_sub[
+            'weight'].sum()
         df_industry_weight_sub = df_industry_weight_sub.reset_index()
 
         count_industry = pd.DataFrame(snap.groupby('sw1')['index_weight'].sum()).reset_index()
         count_industry.columns = ['sw1', 'agg_index_weight']
 
-        snap = pd.merge(left = snap, right = count_industry[['sw1', 'agg_index_weight']], how = 'left', on = 'sw1')
-        snap['internal_weight'] = snap['index_weight']/snap['agg_index_weight']
-        snap = pd.merge(left = snap, right = df_industry_weight_sub[['sw1', 'norm_weight']], how = 'left', on = 'sw1')
+        snap = pd.merge(left=snap, right=count_industry[['sw1', 'agg_index_weight']], how='left', on='sw1')
+        snap['internal_weight'] = snap['index_weight'] / snap['agg_index_weight']
+        snap = pd.merge(left=snap, right=df_industry_weight_sub[['sw1', 'norm_weight']], how='left', on='sw1')
         snap['weight'] = snap['internal_weight'] * snap['norm_weight']
-        df_weight = snap[['symbol','weight']]
+        df_weight = snap[['symbol', 'weight']]
 
         df_weight = df_weight.set_index('symbol')
         weights = df_weight['weight'].to_dict()
@@ -780,15 +781,15 @@ class AlphaStrategy(Strategy, model.FuncRegisterable):
             w_min = np.min(list(w.values()))
             if w_min < 0:
                 delta = 2 * abs(w_min)
-            # if nan assign zero; else add const
+                # if nan assign zero; else add const
                 w = {k: v + delta for k, v in w.items()}
             return w
-        
+
         dic_forecasts = self.signal_model.make_forecast()
         weights = {k: 0.0 if (np.isnan(v) or np.isinf(v)) else v for k, v in dic_forecasts.items()}
         weights = long_only_weight_adjust(weights)
         return weights, ""
-        
+
     def optimize_mc(self, util_func):
         """
         Use naive search (Monte Carol) to find variable that maximize util_func.
@@ -809,10 +810,10 @@ class AlphaStrategy(Strategy, model.FuncRegisterable):
         n_exp = 5  # number of experiments of Monte Carol
         sub_univ = self.ctx.snapshot_sub.index.values
         n_var = len(sub_univ)
-    
+
         weights_mat = np.random.rand(n_exp, n_var)
         weights_mat = weights_mat / weights_mat.sum(axis=1).reshape(-1, 1)
-    
+
         min_f = 1e30
         min_weights = None
         for i in range(n_exp):
@@ -821,7 +822,7 @@ class AlphaStrategy(Strategy, model.FuncRegisterable):
             if f < min_f:
                 min_weights = weights
                 min_f = f
-    
+
         if min_weights is None:
             msg = "No weights can make f > {:.2e} found in this search".format(min_f)
         else:
@@ -841,25 +842,25 @@ class AlphaStrategy(Strategy, model.FuncRegisterable):
         # TODO this can be refine: consider whether we increase or decrease shares on a suspended symbol.
         if not suspensions:
             return
-        
+
         if len(suspensions) == len(self.ctx.universe):
             raise ValueError("All suspended")  # TODO custom error
-        
+
         weights = {sec: w if sec not in suspensions else 0.0 for sec, w in self.weights.items()}
         weights_sum = np.sum(np.abs(list(weights.values())))
         if weights_sum > 0.0:
             weights = {sec: w / weights_sum for sec, w in weights.items()}
-        
+
         self.weights = weights
-    
+
     def on_after_rebalance(self, total):
         print("Before {} re-balance: available cash all = {:9.4e}".format(self.ctx.trade_date, total))  # DEBUG
         pass
-    
+
     def send_bullets(self):
         # self.ctx.trade_api.goal_portfolio_by_batch_order(self.goal_positions)
         self.ctx.trade_api.goal_portfolio(self.goal_positions, algo=self.match_method)
-    
+
     def generate_weights_order(self, weights_dic, turnover, prices, suspensions=None):
         """
         Send order according subject to total turnover and weights of different securities.
@@ -886,7 +887,7 @@ class AlphaStrategy(Strategy, model.FuncRegisterable):
         for sec, w in weights_dic.items():
             goal_pos = dict()
             goal_pos['symbol'] = sec
-            
+
             if sec in suspensions:
                 current_pos = self.ctx.pm.get_position(sec)
                 goal_pos['size'] = current_pos.current_size if current_pos is not None else 0
@@ -906,12 +907,12 @@ class AlphaStrategy(Strategy, model.FuncRegisterable):
                 # cash_left += shares_left * price
                 cash_used += shares * price
                 goal_pos['size'] = shares
-            
+
             goals.append(goal_pos)
-        
+
         cash_left = turnover - cash_used
         return goals, cash_left
-    
+
     def query_portfolio(self):
         positions = []
         for sec in self.ctx.pm.holding_securities:
@@ -921,21 +922,21 @@ class AlphaStrategy(Strategy, model.FuncRegisterable):
 
 class EventDrivenStrategy(Strategy):
     def __init__(self):
-        
+
         super(EventDrivenStrategy, self).__init__()
-    
+
     def on_bar(self, quote):
         pass
-    
+
     def on_tick(self, quote):
         pass
-    
+
     def on_cycle(self):
         pass
-    
+
     def initialize(self):
         pass
-    
+
     def buy_or_sell_with_bar(self, action, bar, size, slippage=0.0):
         """
         Send a limit Buy order with quote.close + slippage.
@@ -952,7 +953,7 @@ class EventDrivenStrategy(Strategy):
         """
         if not isinstance(bar, Bar):
             raise TypeError("quote must be Bar type. You may have passed a Quote.")
-        
+
         if action == common.ORDER_ACTION.SELL:
             slippage *= -1
         entrust_price = bar.close + slippage
@@ -962,7 +963,7 @@ class EventDrivenStrategy(Strategy):
                                                       size)
         if (task_id is None) or (task_id == 0):
             print("place_order FAILED! msg = {}".format(msg))
-        
+
     def buy(self, bar, size=1, slippage=0.0):
         """
         Send a limit Buy order with bar.close + slippage.
@@ -999,7 +1000,7 @@ class EventDrivenStrategy(Strategy):
         self.cancel_all_orders()
         if pos == 0:
             return
-    
+
         ref_price = quote.close
         if pos < 0:
             action = common.ORDER_ACTION.BUY

@@ -842,7 +842,7 @@ class DailyStockSimulator(object):
     """
     
     def __init__(self):
-        # TODO heap is better for insertion and deletion. We only need implement search of heapq module.
+        # TODO heap is better for insertion and deletion. We only need implement search of heap module.
         self.__orders = dict()
         self.seq_gen = SequenceGenerator()
         

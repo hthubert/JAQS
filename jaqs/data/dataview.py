@@ -606,7 +606,7 @@ class DataView(object):
         ----------
         props : dict
             start_date, end_date, freq, symbol, fields, etc.
-        data_api : BaseDataServer
+        data_api : DataService
 
         """
         # data_api.init_from_config(props)

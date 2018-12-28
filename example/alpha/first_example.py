@@ -7,7 +7,7 @@ A very first example of AlphaStrategy back-test:
     
 """
 from __future__ import print_function, unicode_literals, division, absolute_import
-
+from pathlib import Path
 from jaqs.data import RemoteDataService, DataView
 
 import jaqs.util as jutil
@@ -18,14 +18,14 @@ from jaqs.trade import (AlphaStrategy, AlphaBacktestInstance, AlphaTradeApi,
 import jaqs.trade.analyze as ana
 
 data_config = {
-    "remote.data.address": "tcp://data.quantos.org:8910",
-    "remote.data.username": "YourTelephoneNumber",
-    "remote.data.password": "YourToken"
+  "remote.data.address": "tcp://data.quantos.org:8910",
+  "remote.data.username": "17621969269",
+  "remote.data.password": "eyJhbGciOiJIUzI1NiJ9.eyJjcmVhdGVfdGltZSI6IjE1MTIwMjA0OTQwMzciLCJpc3MiOiJhdXRoMCIsImlkIjoiMTc2MjE5NjkyNjkifQ.WQvI9k6dvXe5zIzQwyuPI4BM0Py1OSYFENIQ3z0RG6c"
 }
 trade_config = {
-    "remote.trade.address": "tcp://gw.quantos.org:8901",
-    "remote.trade.username": "YourTelephoneNumber",
-    "remote.trade.password": "YourToken"
+  "remote.trade.address": "tcp://gw.quantos.org:8901",
+  "remote.trade.username": "17621969269",
+  "remote.trade.password": "eyJhbGciOiJIUzI1NiJ9.eyJjcmVhdGVfdGltZSI6IjE1MTIwMjA0OTQwMzciLCJpc3MiOiJhdXRoMCIsImlkIjoiMTc2MjE5NjkyNjkifQ.WQvI9k6dvXe5zIzQwyuPI4BM0Py1OSYFENIQ3z0RG6c"
 }
 
 # Data files are stored in this folder:
@@ -35,6 +35,7 @@ dataview_store_folder = '../../output/simplest/dataview'
 backtest_result_folder = '../../output/simplest'
 
 UNIVERSE = '000807.SH'
+UNIVERSE = Path('000807.txt').read_text()
 
 
 def save_data():
@@ -45,7 +46,7 @@ def save_data():
     """
     dataview_props = {'start_date': 20170101,  # Start and end date of back-test
                       'end_date': 20171030,
-                      'universe': UNIVERSE,    # Investment universe and performance benchmark
+                      'symbol': UNIVERSE,    # Investment universe and performance benchmark
                       'benchmark': '000300.SH',
                       'fields': 'total_mv,turnover', # Data fields that we need
                       'freq': 1   # freq = 1 means we use daily data. Please do not change this.
