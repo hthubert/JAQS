@@ -62,11 +62,11 @@ class FactorFunc:
         return df_eval
 
 
-
 class ResReturnFunc:
     """
     ResReturn(close, m, n)
     """
+
     def __init__(self, dv, allow_future_data):
         self._dv = dv
         self._allow_future_data = allow_future_data
@@ -334,75 +334,90 @@ class DataView(object):
              "qfa_yoyprofit", "qfa_cgrprofit", "qfa_yoynetprofit", "qfa_cgrnetprofit", "yoy_equity", "rd_expense",
              "waa_roe"}
 
-        self.risk_model_fields = { "expo_value", 
-                            "expo_leverage",
-                            "expo_growth",
-                            "expo_size",
-                            "expo_liquidity",
-                            "expo_shortterm_momentum",
-                            "expo_mediumterm_momentum",
-                            "expo_volatility",
-                            "expo_exchange_rate_sensitivity",
-                            "expo_bshare_market",
-                            "expo_coal_consumable_fuels",
-                            "expo_energy_ex_coal",
-                            "expo_steel",
-                            "expo_chemicals",
-                            "expo_construction_materials",
-                            "expo_metals_mining_ex_steel",
-                            "expo_paper_forest_products",
-                            "expo_commercial_professional_services",
-                            "expo_electrical_equipment",
-                            "expo_construction_engineering",
-                            "expo_transportation_noninfrastructure",
-                            "expo_machinery",
-                            "expo_trading_companies_distributors_conglomerates",
-                            "expo_transportation_infrastructure",
-                            "expo_media",
-                            "expo_retailing",
-                            "expo_textiles_apparel_luxury_goods",
-                            "expo_automobiles",
-                            "expo_household_durables",
-                            "expo_autocomponents",
-                            "expo_consumer_services",
-                            "expo_food_products",
-                            "expo_beverages_tobacco",
-                            "expo_healthcare",
-                            "expo_realestate",
-                            "expo_financials",
-                            "expo_software_services",
-                            "expo_computers_peripherals",
-                            "expo_communications_equipment",
-                            "expo_semiconductors_electronics",
-                            "expo_telecommunication_services",
-                            "expo_utilities"
-                        }
+        self.risk_model_fields = {"expo_value",
+                                  "expo_leverage",
+                                  "expo_growth",
+                                  "expo_size",
+                                  "expo_liquidity",
+                                  "expo_shortterm_momentum",
+                                  "expo_mediumterm_momentum",
+                                  "expo_volatility",
+                                  "expo_exchange_rate_sensitivity",
+                                  "expo_bshare_market",
+                                  "expo_coal_consumable_fuels",
+                                  "expo_energy_ex_coal",
+                                  "expo_steel",
+                                  "expo_chemicals",
+                                  "expo_construction_materials",
+                                  "expo_metals_mining_ex_steel",
+                                  "expo_paper_forest_products",
+                                  "expo_commercial_professional_services",
+                                  "expo_electrical_equipment",
+                                  "expo_construction_engineering",
+                                  "expo_transportation_noninfrastructure",
+                                  "expo_machinery",
+                                  "expo_trading_companies_distributors_conglomerates",
+                                  "expo_transportation_infrastructure",
+                                  "expo_media",
+                                  "expo_retailing",
+                                  "expo_textiles_apparel_luxury_goods",
+                                  "expo_automobiles",
+                                  "expo_household_durables",
+                                  "expo_autocomponents",
+                                  "expo_consumer_services",
+                                  "expo_food_products",
+                                  "expo_beverages_tobacco",
+                                  "expo_healthcare",
+                                  "expo_realestate",
+                                  "expo_financials",
+                                  "expo_software_services",
+                                  "expo_computers_peripherals",
+                                  "expo_communications_equipment",
+                                  "expo_semiconductors_electronics",
+                                  "expo_telecommunication_services",
+                                  "expo_utilities"
+                                  }
 
         self.consensus_data = [
-            "est_bps_fy0","est_cfps_fy0","est_dps_fy0","est_ebit_fy0","est_eps_fy0","est_oper_revenue_fy0","est_pb_fy0","est_pe_fy0","est_peg_fy0","est_roe_fy0","net_profit_fy0","rolling_type_fy0",
-            "est_bps_fy1","est_cfps_fy1","est_dps_fy1","est_ebit_fy1","est_eps_fy1","est_oper_revenue_fy1","est_pb_fy1","est_pe_fy1","est_peg_fy1","est_roe_fy1","net_profit_fy1","rolling_type_fy1",
-            "est_bps_fy2","est_cfps_fy2","est_dps_fy2","est_ebit_fy2","est_eps_fy2","est_oper_revenue_fy2","est_pb_fy2","est_pe_fy2","est_peg_fy2","est_roe_fy2","net_profit_fy2","rolling_type_fy2",
-            "est_bps_fy3","est_cfps_fy3","est_dps_fy3","est_ebit_fy3","est_eps_fy3","est_oper_revenue_fy3","est_pb_fy3","est_pe_fy3","est_peg_fy3","est_roe_fy3","net_profit_fy3","rolling_type_fy3",
-            "est_bps_fttm","est_cfps_fttm","est_dps_fttm","est_ebit_fttm","est_eps_fttm","est_oper_revenue_fttm","est_pb_fttm","est_pe_fttm","est_peg_fttm","est_roe_fttm","net_profit_fttm","rolling_type_fttm",
-            "est_bps_yoy","est_cfps_yoy","est_dps_yoy","est_ebit_yoy","est_eps_yoy","est_oper_revenue_yoy","est_pb_yoy","est_pe_yoy","est_peg_yoy","est_roe_yoy","net_profit_yoy","rolling_type_yoy",
-            "est_bps_yoy2","est_cfps_yoy2","est_dps_yoy2","est_ebit_yoy2","est_eps_yoy2","est_oper_revenue_yoy2","est_pb_yoy2","est_pe_yoy2","est_peg_yoy2","est_roe_yoy2","net_profit_yoy2","rolling_type_yoy2",
-            "est_bps_cagr","est_cfps_cagr","est_dps_cagr","est_ebit_cagr","est_eps_cagr","est_oper_revenue_cagr","est_pb_cagr","est_pe_cagr","est_peg_cagr","est_roe_cagr","net_profit_cagr","rolling_type_cagr" ]
+            "est_bps_fy0", "est_cfps_fy0", "est_dps_fy0", "est_ebit_fy0", "est_eps_fy0", "est_oper_revenue_fy0",
+            "est_pb_fy0", "est_pe_fy0", "est_peg_fy0", "est_roe_fy0", "net_profit_fy0", "rolling_type_fy0",
+            "est_bps_fy1", "est_cfps_fy1", "est_dps_fy1", "est_ebit_fy1", "est_eps_fy1", "est_oper_revenue_fy1",
+            "est_pb_fy1", "est_pe_fy1", "est_peg_fy1", "est_roe_fy1", "net_profit_fy1", "rolling_type_fy1",
+            "est_bps_fy2", "est_cfps_fy2", "est_dps_fy2", "est_ebit_fy2", "est_eps_fy2", "est_oper_revenue_fy2",
+            "est_pb_fy2", "est_pe_fy2", "est_peg_fy2", "est_roe_fy2", "net_profit_fy2", "rolling_type_fy2",
+            "est_bps_fy3", "est_cfps_fy3", "est_dps_fy3", "est_ebit_fy3", "est_eps_fy3", "est_oper_revenue_fy3",
+            "est_pb_fy3", "est_pe_fy3", "est_peg_fy3", "est_roe_fy3", "net_profit_fy3", "rolling_type_fy3",
+            "est_bps_fttm", "est_cfps_fttm", "est_dps_fttm", "est_ebit_fttm", "est_eps_fttm", "est_oper_revenue_fttm",
+            "est_pb_fttm", "est_pe_fttm", "est_peg_fttm", "est_roe_fttm", "net_profit_fttm", "rolling_type_fttm",
+            "est_bps_yoy", "est_cfps_yoy", "est_dps_yoy", "est_ebit_yoy", "est_eps_yoy", "est_oper_revenue_yoy",
+            "est_pb_yoy", "est_pe_yoy", "est_peg_yoy", "est_roe_yoy", "net_profit_yoy", "rolling_type_yoy",
+            "est_bps_yoy2", "est_cfps_yoy2", "est_dps_yoy2", "est_ebit_yoy2", "est_eps_yoy2", "est_oper_revenue_yoy2",
+            "est_pb_yoy2", "est_pe_yoy2", "est_peg_yoy2", "est_roe_yoy2", "net_profit_yoy2", "rolling_type_yoy2",
+            "est_bps_cagr", "est_cfps_cagr", "est_dps_cagr", "est_ebit_cagr", "est_eps_cagr", "est_oper_revenue_cagr",
+            "est_pb_cagr", "est_pe_cagr", "est_peg_cagr", "est_roe_cagr", "net_profit_cagr", "rolling_type_cagr"]
 
         self.stk_rating_data = [
-            "est_price_30d", "est_priceinstnum_30d", "wrating_avg_30d", "wrating_downgrade_30d","wrating_instnum_30d", "wrating_maintain_30d", "wrating_numofbuy_30d", "wrating_numofhold_30d","wrating_numofoutperform_30d", "wrating_numofsell_30d", "wrating_numofunderperform_30d","wrating_upgrade_30d",
-            "est_price_90d", "est_priceinstnum_90d", "wrating_avg_90d", "wrating_downgrade_90d", "wrating_instnum_90d", "wrating_maintain_90d", "wrating_numofbuy_90d","wrating_numofhold_90d", "wrating_numofoutperform_90d", "wrating_numofsell_90d","wrating_numofunderperform_90d", "wrating_upgrade_90d",
-            "est_price_180d", "est_priceinstnum_180d","wrating_avg_180d","wrating_downgrade_180d", "wrating_instnum_180d", "wrating_maintain_180d", "wrating_numofbuy_180d", "wrating_numofhold_180d", "wrating_numofoutperform_180d","wrating_numofsell_180d", "wrating_numofunderperform_180d", "wrating_upgrade_180d"
+            "est_price_30d", "est_priceinstnum_30d", "wrating_avg_30d", "wrating_downgrade_30d", "wrating_instnum_30d",
+            "wrating_maintain_30d", "wrating_numofbuy_30d", "wrating_numofhold_30d", "wrating_numofoutperform_30d",
+            "wrating_numofsell_30d", "wrating_numofunderperform_30d", "wrating_upgrade_30d",
+            "est_price_90d", "est_priceinstnum_90d", "wrating_avg_90d", "wrating_downgrade_90d", "wrating_instnum_90d",
+            "wrating_maintain_90d", "wrating_numofbuy_90d", "wrating_numofhold_90d", "wrating_numofoutperform_90d",
+            "wrating_numofsell_90d", "wrating_numofunderperform_90d", "wrating_upgrade_90d",
+            "est_price_180d", "est_priceinstnum_180d", "wrating_avg_180d", "wrating_downgrade_180d",
+            "wrating_instnum_180d", "wrating_maintain_180d", "wrating_numofbuy_180d", "wrating_numofhold_180d",
+            "wrating_numofoutperform_180d", "wrating_numofsell_180d", "wrating_numofunderperform_180d",
+            "wrating_upgrade_180d"
         ]
 
         self.lgt_data = {"lgt_holding", "lgt_holding_ratio"}
         self.rating_data = {"num_rating"}
 
         self.default_fields = {
-                          '_daily_adjust_factor', '_limit', 'adjust_factor', 'close',
-                          'close_adj', 'high', 'high_adj', 'index_member', 'index_weight',
-                          'low', 'low_adj', 'open', 'open_adj', 'trade_status', 'vwap',
-                          'vwap_adj',
-                          'sw1', 'sw2', 'sw3', 'sw4', 'zz1', 'zz2' }
+            '_daily_adjust_factor', '_limit', 'adjust_factor', 'close',
+            'close_adj', 'high', 'high_adj', 'index_member', 'index_weight',
+            'low', 'low_adj', 'open', 'open_adj', 'trade_status', 'vwap',
+            'vwap_adj',
+            'sw1', 'sw2', 'sw3', 'sw4', 'zz1', 'zz2'}
 
         self.custom_daily_fields = []
         self.custom_quarterly_fields = []
@@ -413,7 +428,7 @@ class DataView(object):
         self.TRADE_STATUS_FIELD_NAME = 'trade_status'
         self.TRADE_DATE_FIELD_NAME = 'trade_date'
 
-        self.misc_data = [ 'st_flag' ]
+        self.misc_data = ['st_flag']
 
     # --------------------------------------------------------------------------------------------------------
     # Properties
@@ -546,12 +561,12 @@ class DataView(object):
                     'cash_flow': self.fin_stat_cash_flow,
                     'fin_indicator': self.fin_indicator,
                     'group': self.group_fields,
-                    'risk_model':self.risk_model_fields,
-                    'lgt_data' : self.lgt_data,
+                    'risk_model': self.risk_model_fields,
+                    'lgt_data': self.lgt_data,
                     'rating_data': self.rating_data,
                     'consensus_data': self.consensus_data,
                     'stk_rating_data': self.stk_rating_data,
-                    'misc_data' : self.misc_data
+                    'misc_data': self.misc_data
                     }
         pool_map['daily'] = set.union(pool_map['market_daily'],
                                       pool_map['ref_daily'],
@@ -886,7 +901,8 @@ class DataView(object):
         df_clean['wrating_cycle'] = df_clean['wrating_cycle'].str[-4:].astype(int) / 1000 * 30
         df_clean['date'] = df_clean['date'].astype(int)
         df_clean = df_clean[df_clean['wrating_cycle'] == 90]
-        df_rating = df_clean.pivot_table(values='wrating_instnum', index='date', columns='symbol').fillna(method='ffill')
+        df_rating = df_clean.pivot_table(values='wrating_instnum', index='date', columns='symbol').fillna(
+            method='ffill')
         df_rating = df_rating.replace(np.nan, 0)
 
         data_d_orig = self.data_d
@@ -910,18 +926,19 @@ class DataView(object):
 
         df['date'] = df['date'].astype(int)
 
-        cycle_map = {'263001000' : '30d', '263002000': '90d', '263003000': '180d' }
+        cycle_map = {'263001000': '30d', '263002000': '90d', '263003000': '180d'}
 
         data_d_orig = self.data_d
         self.data_d = daily_df
 
         for cycle, postfix in cycle_map.items():
-            df2 = df[df['wrating_cycle']==cycle].copy()
+            df2 = df[df['wrating_cycle'] == cycle].copy()
             if df2.empty: continue
-            columns = [ (col ,col + '_' + postfix) for col in df2.columns if col not in ['date','symbol', 'wrating_cycle']]
+            columns = [(col, col + '_' + postfix) for col in df2.columns if
+                       col not in ['date', 'symbol', 'wrating_cycle']]
             df2 = df2.rename(columns=dict(columns))
-            for col in df2.columns :
-                if col in fields_rating_ind and col not in ['date','symbol', 'wrating_cycle']:
+            for col in df2.columns:
+                if col in fields_rating_ind and col not in ['date', 'symbol', 'wrating_cycle']:
                     tmp = df2.pivot_table(values=col, index='date', columns='symbol').fillna(method='ffill')
                     self.append_df(tmp, col, is_quarterly=False)
 
@@ -931,18 +948,17 @@ class DataView(object):
 
     def query_consensus_data(self, fields_ind, daily_df):
 
-        rolling_types = set() #['fy0','fy1','fy2','fy3','fttm','yoy','yoy2','cagr']
+        rolling_types = set()  # ['fy0','fy1','fy2','fy3','fttm','yoy','yoy2','cagr']
         query_fields = set(['rolling_type'])
         for f in fields_ind:
             if f in self.consensus_data:
-                query_fields.add ( '_'.join(f.split('_')[0:-1]))
-                rolling_types.add( f.split('_')[-1] )
+                query_fields.add('_'.join(f.split('_')[0:-1]))
+                rolling_types.add(f.split('_')[-1])
 
-
-        nsymbols  = 20
+        nsymbols = 20
         data = []
-        for i in range((len(self.symbol) + nsymbols -1) // nsymbols):
-            symbols = self.symbol[i*nsymbols: (i+1)*nsymbols]
+        for i in range((len(self.symbol) + nsymbols - 1) // nsymbols):
+            symbols = self.symbol[i * nsymbols: (i + 1) * nsymbols]
 
             filter_str = "symbol={0}&start_date={1}&end_date={2}&rolling_type={3}".format(
                 ','.join(symbols),
@@ -970,13 +986,14 @@ class DataView(object):
         self.data_d = daily_df
 
         for rolling_type in df['rolling_type'].unique():
-            df2 = df[df['rolling_type']==rolling_type].copy()
+            df2 = df[df['rolling_type'] == rolling_type].copy()
             if df2.empty: continue
-            columns = [ (col ,col + '_' + rolling_type.lower()) for col in df2.columns if col not in ['date','symbol', 'rolling_type']]
+            columns = [(col, col + '_' + rolling_type.lower()) for col in df2.columns if
+                       col not in ['date', 'symbol', 'rolling_type']]
             df2 = df2.rename(columns=dict(columns))
             df2.index = df2['date']
             for col in df2.columns:
-                if col in fields_ind and col not in ['date','symbol', 'wrating_cycle']:
+                if col in fields_ind and col not in ['date', 'symbol', 'wrating_cycle']:
                     tmp = df2.pivot_table(values=col, index='date', columns='symbol').fillna(method='ffill')
                     self.append_df(tmp, col, is_quarterly=False)
 
@@ -990,7 +1007,7 @@ class DataView(object):
             self.extended_start_date_q,
             self.end_date)
 
-        df, msg = self.data_api.query(view="jz.secMoneyFlowNorth",filter=filter_str, fields=','.join(fields_lgt_ind))
+        df, msg = self.data_api.query(view="jz.secMoneyFlowNorth", filter=filter_str, fields=','.join(fields_lgt_ind))
         if df is None:
             raise ValueError('query secMoneyFlowNorth error: ' + msg)
 
@@ -1002,7 +1019,8 @@ class DataView(object):
         holding_ratio = df.pivot_table(index='trade_date', columns='symbol', values='calculate_ratio')
 
         # 获取除权除息日信息
-        df_dividend, msg = self.data_api.query_dividend(','.join(self.symbol), self.extended_start_date_d, self.end_date)
+        df_dividend, msg = self.data_api.query_dividend(','.join(self.symbol), self.extended_start_date_d,
+                                                        self.end_date)
         if df_dividend is None:
             raise ValueError("query_dividend error: " + msg)
 
@@ -1055,12 +1073,12 @@ class DataView(object):
             for symbol in st_daily.columns:
                 st_daily[symbol] = ''
                 if symbol not in st_symbols: continue
-                tmp = df[df['symbol']==symbol]
+                tmp = df[df['symbol'] == symbol]
                 for i in range(len(tmp)):
                     x = tmp.iloc[i]
                     entry_date = x['entry_dt']
-                    remove_dt  = x['remove_dt']
-                    if remove_dt == 0 :
+                    remove_dt = x['remove_dt']
+                    if remove_dt == 0:
                         remove_dt = 99999999
                     else:
                         remove_dt -= 1
@@ -1164,12 +1182,12 @@ class DataView(object):
                                                                                                             self.REPORT_DATE_FIELD_NAME])
                 quarterly_list.append(df_fin_ind.loc[:, fields_fin_ind])
 
-            fields_risk_model = self._get_fields('risk_model', fields, append=True)    
+            fields_risk_model = self._get_fields('risk_model', fields, append=True)
             if fields_risk_model:
-                df_risk_model, msg5 = self.data_api.query_risk_model( symbol_str,
-                                                                   self.extended_start_date_q, self.end_date,
-                                                                   sep.join(fields_risk_model))
-                daily_list.append(df_risk_model.loc[:, fields_risk_model])                  
+                df_risk_model, msg5 = self.data_api.query_risk_model(symbol_str,
+                                                                     self.extended_start_date_q, self.end_date,
+                                                                     sep.join(fields_risk_model))
+                daily_list.append(df_risk_model.loc[:, fields_risk_model])
 
         else:
             raise NotImplementedError("freq = {}".format(self.freq))
@@ -1218,24 +1236,24 @@ class DataView(object):
                     index_set = index_set | set(df.index)
         index_list = list(index_set)
         index_list.sort()
-            
+
         cols = None
         for df in new_dfs:
             if cols is None:
                 cols = df.columns
             else:
                 cols = cols.append(df.columns)
-        
+
         merge = pd.DataFrame(data=np.nan, index=index_list, columns=cols)
-        
+
         for df in new_dfs:
             for col in df.columns.levels[0]:
                 if not df[col].empty:
                     merge[col] = df[col]
-        
+
         merge.columns = merge.columns.swaplevel()
         merge = merge.sort_index(axis=1)
-    
+
         # merge1 = pd.concat(dfs, axis=1, join='outer')
         # drop duplicated columns. ONE LINE EFFICIENT version
         mask_duplicated = merge.columns.duplicated()
@@ -1265,22 +1283,22 @@ class DataView(object):
 
             df_final = pd.DataFrame(index=index, columns=cols_multi, data=np.nan)
             df_final.index.name = df.index.name
-            
+
             df.columns = df.columns.swaplevel()
             df = df.sort_index(axis=1)
-            
+
             for col in df.columns.levels[0]:
                 df_final[col] = df[col]
-            
+
             df_final.columns = df_final.columns.swaplevel()
             df_final = df_final.sort_index(axis=1)
             # df_final.update(df)
-        
+
             # idx_diff = sorted(set(df_final.index) - set(df.index))
             col_diff = sorted(set(df_final.columns.levels[0].values) - set(df.columns.levels[0].values))
             print("WARNING: some data is unavailable: "
-                   # + "\n    At index " + ', '.join(idx_diff)
-                   + "\n    At fields " + ', '.join(col_diff))
+                  # + "\n    At index " + ', '.join(idx_diff)
+                  + "\n    At fields " + ', '.join(col_diff))
             return df_final
         else:
             return df
@@ -1391,18 +1409,18 @@ class DataView(object):
     def _prepare_benchmark(self):
         if self.benchmark == 'VW_UNIVERSE':
             df_close = self.get_ts('close_adj', start_date=self.extended_start_date_d)
-            df_ret   = df_close.pct_change()
+            df_ret = df_close.pct_change()
             df_float_mv = self.get_ts('float_mv', start_date=self.extended_start_date_d)
-            df_weight = df_float_mv.div(df_float_mv.sum(axis = 1), axis = 0)
-            df_ret_vw = df_weight.mul(df_ret).sum(axis = 1).replace(np.nan, 0.0)
+            df_weight = df_float_mv.div(df_float_mv.sum(axis=1), axis=0)
+            df_ret_vw = df_weight.mul(df_ret).sum(axis=1).replace(np.nan, 0.0)
             df_price = (1 + df_ret_vw).cumprod()
             df_price = pd.DataFrame(df_price)
             df_price.columns = ['close']
             df_bench = df_price
         elif self.benchmark == 'EW_UNIVERSE':
             df_close = self.get_ts('close_adj', start_date=self.extended_start_date_d)
-            df_ret   = df_close.pct_change()
-            df_ret_ew = df_ret.mean(axis = 1).replace(np.nan, 0.0)
+            df_ret = df_close.pct_change()
+            df_ret_ew = df_ret.mean(axis=1).replace(np.nan, 0.0)
             df_price = (1 + df_ret_ew).cumprod()
             df_price = pd.DataFrame(df_price)
             df_price.columns = ['close']
@@ -1413,22 +1431,22 @@ class DataView(object):
                                                 adjust_mode=self.adjust_mode,
                                                 fields='trade_date,symbol,open,high,low,close,vwap,volume,turnover')
             # TODO: we want more than just close price of benchmark
-            df_bench = df_bench.set_index('trade_date').loc[:, ['open','high','low','close']]
+            df_bench = df_bench.set_index('trade_date').loc[:, ['open', 'high', 'low', 'close']]
 
             is_index = re.match('399.*.SZ', self.benchmark) or re.match('000.*.SH', self.benchmark)
             if is_index:
                 # use weights of the first universe
                 if self.benchmark not in self.index_weights:
                     df_weights = self.data_api.query_index_weights_daily(self.benchmark, self.extended_start_date_d,
-                                                                     self.end_date)
+                                                                         self.end_date)
                     self.index_weights[self.benchmark] = df_weights
 
             # Add bm_high, bm_low, bm_open, bm_close to each code
             tmp = self.get_ts('open')
-            for field in ['open','high','low','close']:
+            for field in ['open', 'high', 'low', 'close']:
                 for symbol in tmp.columns:
                     tmp[symbol] = df_bench[field]
-                self.append_df(tmp,   'bm_' + field,  is_quarterly=False)
+                self.append_df(tmp, 'bm_' + field, is_quarterly=False)
 
             df_bench = df_bench[['close']]
         return df_bench
@@ -1494,8 +1512,9 @@ class DataView(object):
 
         merge = merge.loc[:, pd.IndexSlice[:, field_name]]
         merge.columns = merge.columns.droplevel(level=1)
-        self.append_df(merge, field_name, is_quarterly=is_quarterly)  # whether contain only trade days is decided by existing data.
-        
+        self.append_df(merge, field_name,
+                       is_quarterly=is_quarterly)  # whether contain only trade days is decided by existing data.
+
         if is_quarterly:
             df_ann = merge_q.loc[:, pd.IndexSlice[:, self.ANN_DATE_FIELD_NAME]]
             df_ann.columns = df_ann.columns.droplevel(level='field')
@@ -1701,19 +1720,19 @@ class DataView(object):
 
         the_data.columns = the_data.columns.swaplevel()
         the_data = the_data.sort_index(axis=1)
-        
+
         new_cols = the_data.columns.append(df.columns)
         the_data = the_data.reindex(columns=new_cols)
         the_data[field_name] = df[field_name]
         the_data.columns = the_data.columns.swaplevel()
         the_data = the_data.sort_index(axis=1)
-        #the_data = apply_in_subprocess(pd.merge, args=(the_data, df),
+        # the_data = apply_in_subprocess(pd.merge, args=(the_data, df),
         #                            kwargs={'left_index': True, 'right_index': True, 'how': 'left'})  # runs in *only* one process
-        #the_data = pd.merge(the_data, df, left_index=True, right_index=True, how='left')
-        #the_data = the_data.sort_index(axis=1)
-        #merge = the_data.join(df, how='left')  # left: keep index of existing data unchanged
-        #sort_columns(the_data)
-    
+        # the_data = pd.merge(the_data, df, left_index=True, right_index=True, how='left')
+        # the_data = the_data.sort_index(axis=1)
+        # merge = the_data.join(df, how='left')  # left: keep index of existing data unchanged
+        # sort_columns(the_data)
+
         if is_quarterly:
             self.data_q = the_data
         else:
@@ -1932,7 +1951,7 @@ class DataView(object):
             raise ValueError
             return
 
-        #if not keep_level and len(res.columns) and len(field.split(',')) == 1:
+        # if not keep_level and len(res.columns) and len(field.split(',')) == 1:
         if not keep_level and len(field.split(',')) == 1:
             res.columns = res.columns.droplevel(level='field')
             # XXX Save field name for ResReturnFunc
@@ -1968,7 +1987,8 @@ class DataView(object):
         """
         for factor in self.factors + self.labels:
             factor = factor.strip()
-            if not factor: continue
+            if not factor:
+                continue
 
             factor_name = ""
             factor_expr = ""
@@ -1982,7 +2002,7 @@ class DataView(object):
 
             factor_id = factor_expr.split('(')[0].strip()
             if factor_id not in self._import_factors:
-                #print("Can't find factor definitions: " + factor_id)
+                # print("Can't find factor definitions: " + factor_id)
                 continue
             if self._import_factors[factor_id].is_quarterly:
                 t = self.get_ts_quarter(factor_name)
@@ -2031,8 +2051,9 @@ class DataView(object):
 
         Parameters
         ----------
-        folder_path : str or unicode, optional
-            Folder path to store hd5 file and meta data.
+            :param folder_path: str or unicode, optional
+                Folder path to store hd5 file and meta data.
+            :param large_memory:
 
         """
 
@@ -2102,7 +2123,6 @@ class DataView(object):
         data_to_store = {k: v for k, v in data_to_store.items() if v is not None}
         meta_data_to_store = {key: self.__dict__[key] for key in self.meta_data_list}
 
-
         print("\nStore data...")
         jutil.save_json(meta_data_to_store, meta_path)
         self._save_h5(data_path, data_to_store)
@@ -2132,7 +2152,8 @@ class DataView(object):
             h5[key] = value
         h5.close()
 
-    def dup(self, symbols=None, remove_fields=None, start_date=None, end_date=None, fields=None, with_default_fields=True, large_memory=False):
+    def dup(self, symbols=None, remove_fields=None, start_date=None, end_date=None, fields=None,
+            with_default_fields=True, large_memory=False):
         """
         Duplicate this dataview with less symbols, dates between start_date and end_date and less fields.
 
@@ -2168,7 +2189,7 @@ class DataView(object):
 
         if with_default_fields:
             if fields != slice(None):
-                fields = list( set(fields) | set(self.default_fields))
+                fields = list(set(fields) | set(self.default_fields))
         print("dup fields:", fields)
 
         if not symbols:
@@ -2183,7 +2204,8 @@ class DataView(object):
         if self.data_d is not None:
             dv2.data_d = self.data_d.loc[pd.IndexSlice[extended_start_date_d: end_date], pd.IndexSlice[symbols, fields]]
         if self.data_q is not None:
-            dv2.data_q = self.data_q.loc[pd.IndexSlice[extended_start_date_d: end_date], pd.IndexSlice[symbols, slice(None)]]
+            dv2.data_q = self.data_q.loc[
+                pd.IndexSlice[extended_start_date_d: end_date], pd.IndexSlice[symbols, slice(None)]]
 
         dv2._data_inst = self.data_inst.copy()
 
@@ -2198,11 +2220,11 @@ class DataView(object):
         dv2.__dict__.update(meta_data)
 
         dv2.index_weights = {}
-        for k,v in self.index_weights.items():
-            dv2.index_weights[k] = v[ (v.index >= extended_start_date_d) & (v.index <= end_date)]
+        for k, v in self.index_weights.items():
+            dv2.index_weights[k] = v[(v.index >= extended_start_date_d) & (v.index <= end_date)]
 
         dv2.industry_groups = {}
-        for k,v in self.index_weights.items():
+        for k, v in self.index_weights.items():
             dv2.industry_groups[k] = v[(v.index >= extended_start_date_d) & (v.index <= end_date)]
 
         dv2._process_data(large_memory=large_memory)
@@ -2248,18 +2270,18 @@ class DataView(object):
                 dv._import_factors[factor_id] = FactorDef(factor_id, factor_args, factor_body, factor_quarterly)
 
         dv.index_weights = {}
-        for k,v in dv1.index_weights.items():
+        for k, v in dv1.index_weights.items():
             if k in dv2.index_weights:
                 df1 = v
                 df2 = dv2.index_weights[k]
-                dv.index_weights[k] = pd.concat( [df1[df1.index < dv2.start_date], df2[df2.index > dv1.end_date]] )
+                dv.index_weights[k] = pd.concat([df1[df1.index < dv2.start_date], df2[df2.index > dv1.end_date]])
 
         dv.industry_groups = {}
-        for k,v in dv1.industry_groups.items():
+        for k, v in dv1.industry_groups.items():
             if k in dv2.industry_groups:
                 df1 = v
                 df2 = dv2.industry_groups[k]
-                dv.industry_groups[k] = pd.concat( [ df1[df1.index < dv2.start_date], df2[df2.index > dv1.end_date] ] )
+                dv.industry_groups[k] = pd.concat([df1[df1.index < dv2.start_date], df2[df2.index > dv1.end_date]])
 
         dv.data_d = concat_df(dv1, dv2, 'data_d')
         dv.data_q = concat_df(dv1, dv2, 'data_q')
@@ -2276,13 +2298,15 @@ class DataView(object):
         ## use only index member for demean
         df_all_mask = df_all[df_all['index_member'].astype(bool)]
         if method == 'div':
-            df_all_mask[new_name] = df_all_mask.groupby(['trade_date', group])[signal].apply(lambda x: x / np.nanmedian(x))
+            df_all_mask[new_name] = df_all_mask.groupby(['trade_date', group])[signal].apply(
+                lambda x: x / np.nanmedian(x))
         else:
-            df_all_mask[new_name] = df_all_mask.groupby(['tpdrade_date', group])[signal].apply(lambda x: x - np.nanmedian(x))
+            df_all_mask[new_name] = df_all_mask.groupby(['tpdrade_date', group])[signal].apply(
+                lambda x: x - np.nanmedian(x))
 
         ## convert back to long data
-        df_all_clean = df_all.loc[:, ['trade_date', 'symbol']]\
-            .merge(df_all_mask, on=['trade_date', 'symbol'],how='left')\
+        df_all_clean = df_all.loc[:, ['trade_date', 'symbol']] \
+            .merge(df_all_mask, on=['trade_date', 'symbol'], how='left') \
             .pivot_table(values=new_name,
                          index='trade_date',
                          columns='symbol',
@@ -2292,7 +2316,6 @@ class DataView(object):
         self.append_df(df_all_clean, new_name, is_quarterly=is_quarterly)
         return self
 
-
     def to_dataframe(self):
         df = self.data_d.copy()
         df.columns = df.columns.swaplevel()
@@ -2300,8 +2323,8 @@ class DataView(object):
 
     @staticmethod
     def from_dataframe(df):
-        df = df.sort_values(['trade_date','symbol'])
-        df = df.set_index(['trade_date','symbol']).unstack()
+        df = df.sort_values(['trade_date', 'symbol'])
+        df = df.set_index(['trade_date', 'symbol']).unstack()
         df.columns = df.columns.swaplevel()
         df = df.sort_index(axis=1)
 
@@ -3418,7 +3441,6 @@ class EventDataView(object):
         for key, value in dic.items():
             h5[key] = value
         h5.close()
-
 
     # --------------------------------------------------------------------------------------------------------
     # DataView I/O

@@ -7,17 +7,18 @@ from __future__ import print_function
 from __future__ import unicode_literals
 
 import asyncio
-import requests
 import datetime
 import ujson
 import pandas as pd
+import requests
+
 from . import utils
 
 
 class ThanfDataClient(object):
 
-    def __init__(self, addr="http://data.thanf.com"):
-        self._address = addr
+    def __init__(self, address="http://data.thanf.com"):
+        self._address = address
         self._bar_columns = [
             'symbol',
             'trade_date',
@@ -28,6 +29,21 @@ class ThanfDataClient(object):
             'volume',
             'turnover',
             'trade_status']
+        self._index_weights_columns = [
+            'trade_date',
+            'symbol',
+            'sec_name',
+            'weight',
+            'index_code']
+        self.adj_factor_columns = [
+            'symbol',
+            'trade_date',
+            'adjust_factor']
+        self._index_member_columns = [
+            'in_date',
+            'out_date',
+            'symbol'
+        ]
 
     @staticmethod
     def _parse_error(content):
@@ -65,20 +81,29 @@ class ThanfDataClient(object):
 
     @staticmethod
     def _get_response(urls: list):
+        async def get_json(url):
+            json = await loop.run_in_executor(None, requests.get, url)
+            responses.append(json)
+
         async def run(items: list):
-            futures = [loop.run_in_executor(None, requests.get, x) for x in items]
-            responses.extend([await f for f in futures])
+            await asyncio.gather(*[get_json(x) for x in items])
 
-        loop = asyncio.get_event_loop()
+        loop = asyncio.new_event_loop()
         responses = []
-
-        for i in utils.chunks(urls, max(len(urls) // 4, 1)):
+        for i in utils.chunks(urls, max(len(urls) // 3, 1)):
             loop.run_until_complete(run(i))
-
         return responses
 
     def _parse_bar(self, data: list):
-        return pd.DataFrame(data, columns=self._bar_columns)
+        if len(data) == 0 or len(data[0]) == len(self._bar_columns):
+            df = pd.DataFrame(data, columns=self._bar_columns)
+            df['trade_status'] = df['trade_status'].apply(lambda x: '停牌' if x != '交易' else x)
+        else:
+            df = pd.DataFrame(data, columns=self._bar_columns[:-1])
+            df['trade_status'] = '交易'
+        df['vwap'] = 0
+        df.loc[df['volume'] > 0, 'vwap'] = df['turnover']/df['volume']
+        return df
 
     def _parse_daily_rsp(self, rsp_list: list):
         rsp_list = [self._parse(x.content) for x in rsp_list]
@@ -86,7 +111,7 @@ class ThanfDataClient(object):
         err_msg = None
         for data, err in rsp_list:
             if data is not None:
-                df = df.append(self._parse_bar(data))
+                df = df.append(self._parse_bar(data), sort=False)
             else:
                 err_msg = err
 
@@ -100,6 +125,56 @@ class ThanfDataClient(object):
         return self._parse_daily_rsp(self._get_response(urls))
 
     def query_inst_info(self, symbol, fields: list):
-        url = "{0}/instruments?order_book_id={1}".format(self._address, symbol)
+        url = '{0}/instruments?order_book_id={1}'.format(self._address, symbol)
         data, err_msg = self._parse(requests.get(url).content)
         return pd.DataFrame(data)[fields], err_msg
+
+    def query_index_weights_range(self, index, start_date, end_date):
+        args = utils.dict2url({
+            'order_book_id': index,
+            'start_date': start_date,
+            'end_date': end_date})
+        url = '{0}/get_index_component_info?{1}'.format(self._address, args)
+        data, err_msg = self._parse(requests.get(url).content)
+        return pd.DataFrame(data, columns=self._index_weights_columns), err_msg
+
+    def _get_adj_factor_url(self, symbol, start_date, end_date):
+        url_pattern = "{0}/get_stock_adjfactor?{1}"
+        items = {
+            "order_book_id": symbol,
+            "start_date": start_date,
+            "end_date": end_date
+        }
+        return url_pattern.format(self._address, utils.dict2url(items))
+
+    def _parse_adj_factor(self, data: list):
+        return pd.DataFrame(data, columns=self.adj_factor_columns)
+
+    def _parse_adj_factor_rsp(self, rsp_list: list):
+        rsp_list = [self._parse(x.content) for x in rsp_list]
+        df = pd.DataFrame(columns=self.adj_factor_columns)
+        err_msg = None
+        for data, err in rsp_list:
+            if data is not None:
+                df = df.append(self._parse_adj_factor(data))
+            else:
+                err_msg = err
+
+        return df, err_msg
+
+    def query_adj_factor(self, symbol, start_date, end_date):
+        urls = list(map(
+            lambda x: self._get_adj_factor_url(x, start_date, end_date),
+            symbol.split(',')))
+        return self._parse_adj_factor_rsp(self._get_response(urls))
+
+    def query_index_member(self, index, start_date, end_date):
+        url_pattern = "{0}/get_index_component_transfer_info?{1}"
+        args = utils.dict2url({
+            'order_book_id': index,
+            'start_date': start_date,
+            'end_date': end_date})
+
+        rsp = requests.get(url_pattern.format(self._address, args))
+        data, err_msg = self._parse(rsp.content)
+        return pd.DataFrame(data, columns=self._index_member_columns), err_msg

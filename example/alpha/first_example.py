@@ -34,9 +34,9 @@ dataview_store_folder = '../../output/simplest/dataview'
 # Back-test and analysis results are stored here
 backtest_result_folder = '../../output/simplest'
 
-UNIVERSE = '000807.SH'
+# UNIVERSE = '000807.SH'
 UNIVERSE = Path('000807.txt').read_text()
-
+# UNIVERSE = '600559.SH'
 
 def save_data():
     """
@@ -48,7 +48,7 @@ def save_data():
                       'end_date': 20171030,
                       'symbol': UNIVERSE,    # Investment universe and performance benchmark
                       'benchmark': '000300.SH',
-                      'fields': 'total_mv,turnover', # Data fields that we need
+                      'fields': 'total_mv,turnover',  # Data fields that we need
                       'freq': 1   # freq = 1 means we use daily data. Please do not change this.
                       }
 
@@ -68,7 +68,7 @@ def save_data():
 def do_backtest():
     # Load local data file that we just stored.
     dv = DataView()
-    dv.load_dataview(folder_path=dataview_store_folder)
+    dv.load_dataview(folder_path=dataview_store_folder, large_memory=False)
     
     backtest_props = {"start_date"      : dv.start_date, # start and end date of back-test
                       "end_date"        : dv.end_date,
@@ -85,7 +85,8 @@ def do_backtest():
     # We can store anything, e.g., public variables in context.
 
     trade_api = AlphaTradeApi()
-    strategy = AlphaStrategy(pc_method='market_value_weight')
+    # strategy = AlphaStrategy(pc_method='market_value_weight')
+    strategy = AlphaStrategy()
     pm = PortfolioManager()
     bt = AlphaBacktestInstance()
     context = model.Context(dataview=dv, instance=bt, strategy=strategy, trade_api=trade_api, pm=pm)
