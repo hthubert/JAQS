@@ -17,8 +17,6 @@ from jaqs.trade import (AlphaStrategy, AlphaBacktestInstance, AlphaTradeApi,
                         PortfolioManager, AlphaLiveTradeInstance, RealTimeTradeApi)
 
 import jaqs.util as jutil
-import nest_asyncio
-nest_asyncio.apply()
 
 from config_path import DATA_CONFIG_PATH, TRADE_CONFIG_PATH
 

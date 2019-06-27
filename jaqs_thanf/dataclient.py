@@ -6,12 +6,13 @@ Module dataclient defines ThanfDataClient.
 from __future__ import print_function
 from __future__ import unicode_literals
 
+import os
 import asyncio
 import datetime
 import ujson
 import pandas as pd
 import requests
-
+import logging
 from . import utils
 
 
@@ -52,10 +53,15 @@ class ThanfDataClient(object):
 
     @staticmethod
     def _parse(content):
-        if content.startswith(b"{'error_code'"):
-            return None, ThanfDataClient._parse_error(content)
-        else:
-            return ujson.loads(content), None
+        try:
+            if content.startswith(b"{'error_code'"):
+                return None, ThanfDataClient._parse_error(content)
+            else:
+                return ujson.loads(content), None
+        except ValueError:
+            with open(os.path.join(os.getcwd(), "error.txt"), 'wb') as f:
+                f.write(content)
+            raise
 
     def query_trade_dates(self, start_date, end_date):
         if start_date == "":
@@ -80,7 +86,7 @@ class ThanfDataClient(object):
         return url_pattern.format(self._address, utils.dict2url(items))
 
     @staticmethod
-    def _get_response(urls: list):
+    def _get_response_async(urls: list):
         async def get_json(url):
             json = await loop.run_in_executor(None, requests.get, url)
             responses.append(json)
@@ -90,8 +96,18 @@ class ThanfDataClient(object):
 
         loop = asyncio.new_event_loop()
         responses = []
-        for i in utils.chunks(urls, max(len(urls) // 3, 1)):
+        for i in utils.chunks(urls, max(len(urls) // 1, 1)):
             loop.run_until_complete(run(i))
+        return responses
+
+    @staticmethod
+    def _get_response(urls: list):
+        logging.info('get_response begin')
+        responses = []
+        with requests.Session() as s:
+            for i in urls:
+                responses.append(s.get(i))
+        logging.info('get_response end')
         return responses
 
     def _parse_bar(self, data: list):
@@ -106,6 +122,7 @@ class ThanfDataClient(object):
         return df
 
     def _parse_daily_rsp(self, rsp_list: list):
+        logging.info('parse_daily_rsp begin')
         rsp_list = [self._parse(x.content) for x in rsp_list]
         df = pd.DataFrame(columns=self._bar_columns)
         err_msg = None
@@ -114,7 +131,7 @@ class ThanfDataClient(object):
                 df = df.append(self._parse_bar(data), sort=False)
             else:
                 err_msg = err
-
+        logging.info('parse_daily_rsp end')
         return df, err_msg
 
     def daily(self, symbol: str, start_date, end_date, adjust_mode=None):

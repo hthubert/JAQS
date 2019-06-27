@@ -22,12 +22,11 @@ def read_install_requires():
 setup(
     # Install data files specified in MANIFEST.in file.
     include_package_data=True,
-    #package_data={'': ['*.json', '*.css', '*.html']},
     # Package Information
     name='jaqs',
     url='https://github.com/quantOS-org/JAQS',
     version=ver,
-        license='Apache 2.0',
+    license='Apache 2.0',
     # information
     description='Open source quantitative research&trading framework.',
     long_description=readme(),

@@ -12,6 +12,9 @@ from jaqs_thanf import ThanfDataService
 
 from jaqs.research import SignalDigger
 import jaqs.util as jutil
+import logging
+import ujson
+import os
 
 # from config_path.py, we import the path of config files
 #from config_path import DATA_CONFIG_PATH
@@ -24,10 +27,11 @@ UNIVERSE = Path('000300.SH.csv').read_text()
 UNIVERSE = '000300.SH'
 # print(UNIVERSE)
 
+
 def save_dataview():
     dataview_props = {
-        'start_date': 20150101,
-        'end_date': 20171001,
+        'start_date': 20180101,
+        'end_date': 20190101,
         'universe': UNIVERSE,
         'freq': 1}
     ds = ThanfDataService()
@@ -83,5 +87,9 @@ def simple_test_signal():
 
 
 if __name__ == "__main__":
+    logging.basicConfig(
+        format="%(asctime)s %(name)s:[%(levelname)s]:%(message)s",
+        datefmt="%Y%M%d %H:%M:%S",
+        level=logging.INFO)
     save_dataview()
     simple_test_signal()
